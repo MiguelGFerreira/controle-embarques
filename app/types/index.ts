@@ -42,3 +42,18 @@ export const FILIAL_NAMES: { [key: number]: string } = {
     20: 'Varginha',
     21: 'Viana',
 }
+
+export interface Sample {
+    'Nro. Amostra': string;
+	'Amostra por:': 'P' | 'E';
+	'Status': string;
+	'Quantidade': string;
+	'Peso Bruto': string;
+	'Dt. Envio': string | null;
+	'Conh. Aereo': string;
+	'Data Aprov.': string | null;
+	'Dt. Rejeição': string | null;
+	'Classif. Rej': string;
+	'Cliente': string;
+	'Loja Cliente': string;
+}
