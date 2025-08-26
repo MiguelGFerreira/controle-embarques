@@ -48,7 +48,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     const body = await request.json();
 
     const shipmentInfoQuery = `
-        SELECT EEC_PEDREF AS pedido, EEC_FILIAL AS filial, EEC_IMPORF AS cliente, EEC_IMPOLO AS loja
+        SELECT EEC_PEDREF AS pedido, EEC_FILIAL AS filial
         FROM EEX500 WHERE R_E_C_N_O_ = ${id}
     `;
     const shipmentResult = await dbQuery(shipmentInfoQuery);
@@ -56,7 +56,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     if (!shipmentResult || shipmentResult.length === 0) {
         return NextResponse.json({ message: "Embarque não encontrado." }, { status: 404});
     }
-    const { pedido, filial, cliente, loja } = shipmentResult[0];
+    const { pedido, filial } = shipmentResult[0];
 
     const insertQuery = `
         INSERT INTO EXU500 (
@@ -87,8 +87,8 @@ export async function POST(request: Request, { params }: { params: { id: string 
             ,${body.dtAprov || 'NULL'}
             ,${body.dtRejeicao || 'NULL'}
             ,${body.classifRejeicao}
-            ,${cliente}
-            ,${loja}
+            ,${body.clienteCod}
+            ,${body.clienteLoja}
         )
     `;
 

@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Sample, Shipment } from "../types";
-import { Loader2, PlusCircle, X } from "lucide-react";
+import { Loader2, PlusCircle, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import useSWR from "swr";
 import LoadingSpinner from "./LoadingSpinner";
+import ClientLookUpModal from "./ClientLookUpModal";
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
@@ -19,8 +20,19 @@ const SampleForm = ({ shipment, existingSamplesCount, onSave, onCancel }: any) =
         dtAprov: '',
         dtRejeicao: '',
         classifRejeicao: '',
+        clienteCod: '',
+        clienteLoja: '',
     });
     const [isSaving, setIsSaving] = useState(false);
+    const [isClientLookUpOpen, setIsClientLookUpOpen] = useState(false);
+
+    const handleClientSelect = (client: { Codigo: string, Loja: string, Nome: string }) => {
+        setFormData(prev => ({
+            ...prev,
+            clienteCod: client.Codigo,
+            clienteLoja: client.Loja,
+        }));
+    };
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -50,23 +62,51 @@ const SampleForm = ({ shipment, existingSamplesCount, onSave, onCancel }: any) =
     };
 
     return (
-        <form onSubmit={handleSave} className="bg-gray-50 p-4 rounded-b-lg mt-4 border-t">
-            <h3 className="font-semibold text-lg mb-2 text-gray-700">
-                {existingSamplesCount === 0 ? 'Cadastrar primeira amostra' : 'Cadastrar nova amostra'}
-            </h3>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <input name="nroAmostra" onChange={e => setFormData({...formData, nroAmostra: e.target.value})} placeholder="Nro. Amostra" required className="p-2 border rounded" />
-                <input name="quantidade" type="number" onChange={e => setFormData({...formData, quantidade: e.target.value})} placeholder="Quantidade" required className="p-2 border rounded" />
-                <input name="pesoBruto" type="number" onChange={e => setFormData({...formData, pesoBruto: e.target.value})} placeholder="Peso Bruto" required className="p-2 border rounded" />
-                <input name="conhecimentoAereo" onChange={e => setFormData({...formData, conhecimentoAereo: e.target.value})} placeholder="Conh. Aéreo" required className="p-2 border rounded" />
-            </div>
-            <div className="flex justify-end mt-4 gap-2">
-                <button type="button" onClick={onCancel} className="px-4 py-2 bg-white text-gray-600 border rounded cursor-pointer">Cancelar</button>
-                <button type="button" onClick={onCancel} className="px-4 py-2 bg-green-600 text-white rounded disabled:bg-green-300 cursor-pointer">
-                    {isSaving ? 'Salvando...' : 'Salvar Amostra'}
-                </button>
-            </div>
-        </form>
+        <>
+            <form onSubmit={handleSave} className="bg-gray-50 p-4 rounded-b-lg mt-4 border-t">
+                <h3 className="font-semibold text-lg mb-2 text-gray-700">
+                    {existingSamplesCount === 0 ? 'Cadastrar primeira amostra' : 'Cadastrar nova amostra'}
+                </h3>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <input name="nroAmostra" onChange={e => setFormData({ ...formData, nroAmostra: e.target.value })} placeholder="Nro. Amostra" required className="p-2 border rounded" />
+                    <input name="quantidade" type="number" onChange={e => setFormData({ ...formData, quantidade: e.target.value })} placeholder="Quantidade" required className="p-2 border rounded" />
+                    <input name="pesoBruto" type="number" onChange={e => setFormData({ ...formData, pesoBruto: e.target.value })} placeholder="Peso Bruto" required className="p-2 border rounded" />
+                    <input name="conhecimentoAereo" onChange={e => setFormData({ ...formData, conhecimentoAereo: e.target.value })} placeholder="Conh. Aéreo" required className="p-2 border rounded" />
+                    <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+                        <label htmlFor="cliente" className="block text-sm font-medium text-gray-700">Cliente</label>
+                        <div className="flex items-center gap-2 mt-1">
+                            <input
+                                value={formData.clienteCod}
+                                placeholder="Código"
+                                className="p-2 border rounded w-1/3 bg-gray-200"
+                                readOnly
+                            />
+                            <input
+                                value={formData.clienteLoja}
+                                placeholder="Loja"
+                                className="p-2 border rounded w-1/3 bg-gray-200"
+                                readOnly
+                            />
+                            <button type="button" onClick={() => setIsClientLookUpOpen(true)} className="p-2 bg-green-100 text-green-700 rounded-md hover:bg-green-200 cursor-pointer">
+                                <Search size={20} />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex justify-end mt-4 gap-2">
+                    <button type="button" onClick={onCancel} className="px-4 py-2 bg-white text-gray-600 border rounded cursor-pointer">Cancelar</button>
+                    <button type="button" onClick={onCancel} className="px-4 py-2 bg-green-600 text-white rounded disabled:bg-green-300 cursor-pointer">
+                        {isSaving ? 'Salvando...' : 'Salvar Amostra'}
+                    </button>
+                </div>
+            </form>
+
+            <ClientLookUpModal
+                isOpen={isClientLookUpOpen}
+                onClose={() => setIsClientLookUpOpen(false)}
+                onClientSelect={handleClientSelect}
+            />
+        </>
     )
 }
 
