@@ -4,6 +4,8 @@ export interface Shipment {
     Embarque: string;
     IDE: string;
     Status: string;
+    Cliente: string;
+    Loja: string;
     Importador: string;
     'Ref.Import.': string | null;
 	Rota: string | null;
@@ -56,4 +58,6 @@ export interface Sample {
 	'Classif. Rej': string;
 	'Cliente': string;
 	'Loja Cliente': string;
+    'Cliente Nome': string;
+    R_E_C_N_O_: number;
 }

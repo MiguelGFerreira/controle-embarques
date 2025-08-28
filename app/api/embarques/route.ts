@@ -31,6 +31,8 @@ export async function GET(request: Request) {
             ,TRIM(EEC_PREEMB) [Embarque]
             ,TRIM(EEC_PEDREF) [IDE]
             ,TRIM(EEC_STTDES) [Status]
+            ,TRIM(EEC_IMPORT) [Cliente]
+	        ,TRIM(EEC_IMLOJA) [Loja]
             ,TRIM(EEC_IMPODE) [Importador]
             ,TRIM(EEC_YFUMIG) [Fumigacao ?] -- sim (1) ou nao (2)
             ,TRIM(EEC_YLFUMI) [Local Fumigacao]

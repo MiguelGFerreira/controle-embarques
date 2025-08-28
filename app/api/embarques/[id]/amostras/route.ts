@@ -1,4 +1,5 @@
 import { dbQuery } from "@/app/lib/db";
+import { normalizeDate } from "@/app/utils";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
@@ -28,9 +29,14 @@ export async function GET(request: Request, { params }: { params: { id: string }
         ,EXU_CLAREJ [Classif. Rej]
         ,EXU_RKFCLI [Cliente]
         ,EXU_RKFLOJ [Loja Cliente]
-    FROM EXU500
-    WHERE EXU_FILIAL = ${filial} AND EXU_PEDIDO = ${pedido} AND D_E_L_E_T_ = ''
-    ORDER BY R_E_C_N_O_ DESC
+        ,SA1.A1_NOME [Cliente Nome]
+        ,EXU.R_E_C_N_O_
+    FROM EXU500 EXU
+    LEFT JOIN SA1500 SA1 ON SA1.A1_COD = EXU.EXU_RKFCLI
+        AND SA1.A1_LOJA = EXU.EXU_RKFLOJ
+        AND SA1.D_E_L_E_T_ = ''
+    WHERE EXU_FILIAL = ${filial} AND EXU_PEDIDO = ${pedido} AND EXU.D_E_L_E_T_ = ''
+    ORDER BY EXU.R_E_C_N_O_ DESC
     `;
 
     try {
@@ -48,8 +54,8 @@ export async function POST(request: Request, { params }: { params: { id: string 
     const body = await request.json();
 
     const shipmentInfoQuery = `
-        SELECT EEC_PEDREF AS pedido, EEC_FILIAL AS filial
-        FROM EEX500 WHERE R_E_C_N_O_ = ${id}
+        SELECT TRIM(EEC_PEDREF) AS pedido, TRIM(EEC_FILIAL) AS filial
+        FROM EEC500 WHERE R_E_C_N_O_ = ${id}
     `;
     const shipmentResult = await dbQuery(shipmentInfoQuery);
 
@@ -64,7 +70,6 @@ export async function POST(request: Request, { params }: { params: { id: string 
             ,EXU_NROAMO
             ,EXU_TIPOAM
             ,EXU_PEDIDO
-            ,EXU_STATUS
             ,EXU_QTD
             ,EXU_PESOBR
             ,EXU_DTENV
@@ -74,23 +79,26 @@ export async function POST(request: Request, { params }: { params: { id: string 
             ,EXU_CLAREJ
             ,EXU_RKFCLI
             ,EXU_RKFLOJ
+            ,R_E_C_N_O_
         ) VALUES (
-            ${filial}
-            ,${body.nroAmostra}
-            ,${body.tipoAmostra}
-            ,${pedido}
-            ,'OLHAR'
+            '${filial}'
+            ,'${body.nroAmostra}'
+            ,'${body.tipoAmostra}'
+            ,'${pedido}'
             ,${body.quantidade}
             ,${body.pesoBruto}
-            ,${body.dtEnvio || 'NULL'}
-            ,${body.conhecimentoAereo}
-            ,${body.dtAprov || 'NULL'}
-            ,${body.dtRejeicao || 'NULL'}
-            ,${body.classifRejeicao}
-            ,${body.clienteCod}
-            ,${body.clienteLoja}
+            ,'${normalizeDate(body.dtEnvio)}'
+            ,'${body.conhecimentoAereo}'
+            ,'${normalizeDate(body.dtAprov)}'
+            ,'${normalizeDate(body.dtRejeicao)}'
+            ,'${body.classifRejeicao}'
+            ,'${body.clienteCod}'
+            ,'${body.clienteLoja}'
+            ,(SELECT MAX(R_E_C_N_O_) + 1 FROM EXU500)
         )
     `;
+
+    console.log("insertQuery:", insertQuery)
 
     try {
         await dbQuery(insertQuery);

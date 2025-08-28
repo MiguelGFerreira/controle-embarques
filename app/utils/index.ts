@@ -25,7 +25,7 @@ export const editableFieldsConfig: EditableField[] = [
     { key: 'DeadLine Draft', dbColumn: 'EEC_YDTDRA', type: 'date', maxLength: 9 },
     { key: 'DeadLine Carga', dbColumn: 'EEC_YDTCAR', type: 'date', maxLength: 9 },
     { key: 'Dt. Invoice', dbColumn: 'EEC_DTINVO', type: 'date', maxLength: 9 },
-    
+
     // --- CAMPOS DE TEXTO ---
     { key: 'Prazo Freetime', dbColumn: 'EEC_YFREET', type: 'text', maxLength: 3 },
     { key: 'Local Fumigacao', dbColumn: 'EEC_YLFUMI', type: 'text', maxLength: 250 },
@@ -69,3 +69,19 @@ export const normalizeDate = (s: string) => {
     const day = String(d.getDate()).padStart(2, '0');
     return `${y}${m}${day}`;
 };
+
+export const formatarDataView = (input: string | null): string => {
+    if (!input) return '';
+
+    if (input.length !== 8) {
+        return '';
+    }
+
+    const year = input.substring(0, 4);
+    const month = input.substring(4, 6);
+    const day = input.substring(6, 8);
+
+    const shortYear = year.substring(2);
+
+    return `${day}/${month}/${shortYear}`;
+}

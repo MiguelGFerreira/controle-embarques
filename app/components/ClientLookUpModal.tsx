@@ -16,12 +16,13 @@ interface Cliente {
 
 interface ModalProps {
     isOpen: boolean;
+    clientCode: string;
     onClose: () => void;
     onClientSelect: (cliente: Cliente) => void;
 }
 
-export default function ClientLookUpModal({ isOpen, onClose, onClientSelect }: ModalProps) {
-    const [searchTerm, setSearchTerm] = useState('');
+export default function ClientLookUpModal({ isOpen, onClose, onClientSelect, clientCode }: ModalProps) {
+    const [searchTerm, setSearchTerm] = useState(clientCode || '');
     const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
     let apiUrl = `/api/clientes`;
