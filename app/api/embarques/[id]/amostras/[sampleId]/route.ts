@@ -2,8 +2,8 @@ import { dbQuery } from "@/app/lib/db";
 import { normalizeDate } from "@/app/utils";
 import { NextResponse } from "next/server";
 
-export async function PUT(request: Request, { params }: { params: { id: string, sampleId: string }}) {
-    const { sampleId } = params;
+export async function PUT(request: Request, { params }: { params: Promise<{ sampleId: number }> }) {
+    const sampleId = (await params).sampleId;
     const body = await request.json();
 
     if (!sampleId) {

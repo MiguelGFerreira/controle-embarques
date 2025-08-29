@@ -2,8 +2,8 @@ import { dbQuery } from "@/app/lib/db";
 import { normalizeDate } from "@/app/utils";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-    const { id } = params;
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const id = (await params).id;
 
     const shipmentInfoQuery = `
         SELECT EEC_PEDREF as pedido, EEC_FILIAL AS filial
@@ -49,8 +49,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
     }
 }
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
-    const { id } = params;
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const id = (await params).id;
     const body = await request.json();
 
     const shipmentInfoQuery = `
