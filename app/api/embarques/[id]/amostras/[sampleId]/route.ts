@@ -26,10 +26,10 @@ export async function PUT(request: Request, { params }: { params: { id: string, 
     try {
         console.log("Update query:", updateQuery);
         await dbQuery(updateQuery);
-        return NextResponse.json({ message: "Amostra atualizada com sucesso." }, { status: 200});
+        return NextResponse.json({ message: "Amostra atualizada com sucesso." }, { status: 200 });
     }
     catch (error) {
         console.error("API PUT Amostra error:", error);
-        return NextResponse.json({ message: "Erro ao atualizar amostra." }, { status: 500});
+        return NextResponse.json({ message: "Erro ao atualizar amostra." }, { status: 500 });
     }
 }

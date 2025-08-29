@@ -222,6 +222,7 @@ export default function SampleModal({ shipment, onClose }: { shipment: Shipment 
     const handleCancel = () => {
         setIsAddingNew(false);
         setEditingSample(null);
+        onClose();
     }
 
     const isFormOpen = isAddingNew || editingSample;
