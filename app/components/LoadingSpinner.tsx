@@ -11,7 +11,7 @@ const LoadingSpinner = () => {
 				alt={"loading_spinner"}
 				width={60}
 				height={60}
-				className="animate-spin"
+				className="animate-spin select-none"
 				priority={true}
 			/>
 			<span className="sr-only">Loading...</span>
