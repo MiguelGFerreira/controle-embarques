@@ -93,8 +93,8 @@ export default function Home() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {isLoading && <tr><td colSpan={6} className="!text-center !p-4"><LoadingSpinner /></td></tr>}
-                                {error && <tr><td colSpan={6} className="!text-center !p-4 !text-red-500">Falha ao carregar dados.</td></tr>}
+                                {isLoading && <tr><td colSpan={7} className="!text-center !p-4"><LoadingSpinner /></td></tr>}
+                                {error && <tr><td colSpan={7} className="!text-center !p-4 !text-red-500">Falha ao carregar dados.</td></tr>}
                                 {data?.data.map((shipment: Shipment) => (
                                     <tr key={shipment.R_E_C_N_O_}>
                                         <td className="!px-6 !py-4 !whitespace-nowrap">

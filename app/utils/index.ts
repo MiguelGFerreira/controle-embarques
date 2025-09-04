@@ -99,3 +99,15 @@ export const formatarDataParaInput = (input: string | null): string => {
 
     return `${year}-${month}-${day}`;
 };
+
+export const formatarDataIso = (input: string | null): string => {
+    if (!input) return '';
+
+    const date = new Date(input);
+
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+}

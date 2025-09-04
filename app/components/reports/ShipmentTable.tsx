@@ -1,0 +1,117 @@
+import { Shipment, shipmentRecord, ShipmentStatus } from "@/app/types";
+import LoadingSpinner from "../LoadingSpinner";
+import { formatarDataIso } from "@/app/utils";
+import { useState } from "react";
+import { ChevronDown, ChevronRight } from "lucide-react";
+
+const statusColorMap: Record<ShipmentStatus, string> = {
+    'No Porto': 'bg-blue-200 text-blue-800',
+    'Amostra Aprovada': 'bg-green-200 text-green-800',
+    'Amostra Pendente': 'bg-yellow-200 text-yellow-800',
+    'Amostra Enviada': 'bg-orange-200 text-orange-800',
+    'Sem Amostra': 'bg-gray-200 text-gray-800',
+}
+
+function ExpandedDetails({ item }: { item: shipmentRecord }) {
+    const DetailItem = ({ label, value }: { label: string; value: string | number | null | undefined }) => {
+        if (!value) return null;
+        return (
+            <div className="flex flex-col">
+                <span className="text-xs font-semibold text-gray-500">{label}</span>
+                <span className="text-sm text-gray-800">{value}</span>
+            </div>
+        );
+    };
+
+    return (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-3 p-4 bg-green-50/40">
+            <DetailItem label="Booking" value={item["Nr. Booking"]} />
+            <DetailItem label="Prazo Freetime" value={item["Prazo Freetime"]} />
+            <DetailItem label="Rota" value={item.Rota} />
+            <DetailItem label="Navio" value={item.Navio} />
+            <DetailItem label="Invoice" value={item.Invoice} />
+            <DetailItem label="Viagem" value={item.Viagem} />
+            <DetailItem label="Fumigação" value={item.Fumigacao} />
+            <DetailItem label="Local Fumigação" value={item["Local Fumigacao"]} />
+            <DetailItem label="Inspeção Fito." value={item["Inspecao Fitossanitaria"]} />
+        </div>
+    )
+}
+
+function TableRow({ item }: { item: shipmentRecord }) {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const statusColorMap: Record<ShipmentStatus, string> = {
+        'No Porto': 'bg-blue-200 text-blue-800',
+        'Amostra Aprovada': 'bg-green-200 text-green-800',
+        'Amostra Pendente': 'bg-yellow-200 text-yellow-800',
+        'Amostra Enviada': 'bg-orange-200 text-orange-800',
+        'Sem Amostra': 'bg-gray-200 text-gray-800',
+    }
+
+    return (
+        <>
+            <tr className="hover:bg-gray-50 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+                <td className="px-4 py-3 whitespace-nowrap">
+                    <span className={`px-3 py-1 text-xs font-medium rounded-full ${statusColorMap[item.Status]}`}>
+                        {item.Status}
+                    </span>
+                </td>
+                <td>{item.IDE}</td>
+                <td>{formatarDataIso(item.ETA)}</td>
+                <td>{formatarDataIso(item["Retir. CTNR"])}</td>
+                <td>{formatarDataIso(item["Dt. Estufagem"])}</td>
+                <td>{formatarDataIso(item["Chegar Porto"])}</td>
+                <td>{formatarDataIso(item["DeadLine Carga"])}</td>
+                <td>{formatarDataIso(item["DeadLine Draft"])}</td>
+                <td>{item.Destino}</td>
+                <td>{item.Ref_Import}</td>
+                <td>
+                    {isExpanded ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                </td>
+            </tr>
+            {isExpanded && (
+                <tr>
+                    <td colSpan={11}>
+                        <ExpandedDetails item={item} />
+                    </td>
+                </tr>
+            )}
+        </>
+    );
+}
+
+interface ShipmentTableProps {
+    data: shipmentRecord[];
+    isLoading: boolean;
+}
+
+export default function ShipmentTable({ data, isLoading }: ShipmentTableProps) {
+    if (isLoading) return <LoadingSpinner />;
+    if (!data || data.length === 0) return <div className="text-center text-gray-700 p-8 bg-white rounded-md shadow">Nenhum registro encontrado.</div>;
+
+    return (
+        <div className="bg-white shadow-sm rounded-lg overflow-x-auto border">
+            <table className="grupotristao">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>IDE</th>
+                        <th>ETA</th>
+                        <th>Retirada CTNR.</th>
+                        <th>Estufagem</th>
+                        <th>Chegada Porto</th>
+                        <th>Deadline Carga</th>
+                        <th>Deadline Draft</th>
+                        <th>Destino</th>
+                        <th>Ref. Importador</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map((item) => <TableRow key={item.ID} item={item} />)}
+                </tbody>
+            </table>
+        </div>
+    );
+}

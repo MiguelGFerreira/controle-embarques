@@ -8,9 +8,9 @@ export interface Shipment {
     Loja: string;
     Importador: string;
     'Ref.Import.': string | null;
-	Rota: string | null;
-	'Nr. Booking': string | null;
-	'Obs Planilha': string | null;
+    Rota: string | null;
+    'Nr. Booking': string | null;
+    'Obs Planilha': string | null;
     'Retir. CTNR': string | null;
     'Dt. Estufagem': string | null;
     'Chegar Porto': string | null;
@@ -47,17 +47,52 @@ export const FILIAL_NAMES: { [key: number]: string } = {
 
 export interface Sample {
     'Nro. Amostra': string;
-	'Amostra por:': 'P' | 'E';
-	'Status': string;
-	'Quantidade': string;
-	'Peso Bruto': string;
-	'Dt. Envio': string | null;
-	'Conh. Aereo': string;
-	'Data Aprov.': string | null;
-	'Dt. Rejeição': string | null;
-	'Classif. Rej': string;
-	'Cliente': string;
-	'Loja Cliente': string;
+    'Amostra por:': 'P' | 'E';
+    'Status': string;
+    'Quantidade': string;
+    'Peso Bruto': string;
+    'Dt. Envio': string | null;
+    'Conh. Aereo': string;
+    'Data Aprov.': string | null;
+    'Dt. Rejeição': string | null;
+    'Classif. Rej': string;
+    'Cliente': string;
+    'Loja Cliente': string;
     'Cliente Nome': string;
     R_E_C_N_O_: number;
+}
+
+export type ShipmentStatus = 'No Porto' | 'Amostra Aprovada' | 'Amostra Pendente' | 'Amostra Enviada' | 'Sem Amostra';
+
+export interface shipmentRecord {
+    Status: ShipmentStatus;
+    IDE: string;
+    ID: string;
+    Navio: string;
+    Destino: string;
+    ARM: 'VARG' | 'VIAN';
+    Importador: string;
+    Ref_Import: string;
+    Embalagem: string;
+    Quantidade: number;
+    Obs_Planilha: string;
+    'Prazo Freetime': string;
+	'Nr. Booking': string;
+	Rota: string;
+	Invoice: string;
+	'Inspecao Fitossanitaria': string;
+	Viagem: string;
+	Fumigacao: string;
+    'Local Fumigacao': string;
+    'Material Fumigacao': string;
+    'Retir. CTNR': string;
+    'Dt. Estufagem': string;
+	'Chegar Porto': string;
+	ETA: string;
+    'Dt. Conhec.': string;
+    'Dt. Fumigacao': string;
+    'Dt. Insp Fitossan.': string;
+    'DeadLine Draft': string;
+    'DeadLine Carga': string;
+    'Dt. Invoice': string;
 }
