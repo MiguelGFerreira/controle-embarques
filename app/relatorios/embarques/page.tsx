@@ -37,7 +37,7 @@ export default function EmbarquesReportPage() {
     }, [response, statusFilter]);
 
     return (
-        <div className="space-y-6 bg-gray-50 min-h-screen">
+        <div className="space-y-6 bg-gray-50">
             <header className="flex px-4 justify-between items-center">
                 <h1 className="text-3xl font-bold text-gray-800">Relatório de Embarques</h1>
                 <ReportFilterBar
