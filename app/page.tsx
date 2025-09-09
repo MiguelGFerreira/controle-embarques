@@ -19,8 +19,8 @@ const dashboardCards = [
         color: 'text-blue-600'
     },
     {
-        href: 'http://10.0.73.216:83/invoices/app',
-        target: "_blank",
+        href: '/gerenciamento/invoice',
+        target: "_self",
         icon: Receipt,
         title: 'Invoice e RE',
         description: 'Emissão e impressão de Invoice e RE',

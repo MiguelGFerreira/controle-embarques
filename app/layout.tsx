@@ -10,11 +10,6 @@ const inter = Inter({
   variable: "--font-sans"
 });
 
-export const metadata: Metadata = {
-  title: "Controle de Embarques",
-  description: "Ambiente para gerenciamento das datas dos embarques",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{

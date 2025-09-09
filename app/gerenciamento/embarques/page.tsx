@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from 'swr';
 import { FILIAL_NAMES, PaginatedShipmentResponse, Shipment } from "@/app/types";
 import { Bean, Edit, Search } from "lucide-react";
@@ -38,6 +38,10 @@ export default function Home() {
     const handleModalSave = () => {
         mutate(); // revalida os dados da api
     };
+
+    useEffect(() => {
+        document.title = 'Controle de Embarques'; // Muda o título da página dinamicamente no lado do cliente
+    }, [])
 
     return (
         <div className="bg-gray-50">

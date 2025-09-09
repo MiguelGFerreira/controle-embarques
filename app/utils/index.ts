@@ -59,6 +59,8 @@ export const editableFieldsConfig: EditableField[] = [
     }
 ]
 
+// Funcao pra pegar a data do input (iso) e normalizar para o formato do protheus
+// 2025-09-15 -> 20250915
 export const normalizeDate = (s: string) => {
     if (!s) return '';
     if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s.replace(/-/g, '');
@@ -70,6 +72,8 @@ export const normalizeDate = (s: string) => {
     return `${y}${m}${day}`;
 };
 
+// Funcao pra formatar a data que vem do protheus para o formato dd/mm/yy
+// 20250915 -> 15/09/25
 export const formatarDataView = (input: string | null): string => {
     if (!input) return '';
 
@@ -86,6 +90,8 @@ export const formatarDataView = (input: string | null): string => {
     return `${day}/${month}/${shortYear}`;
 }
 
+// Funcao pra formatar a data que vem do protheus para utilizar no input (iso)
+// 20250915 -> 2025-09-15
 export const formatarDataParaInput = (input: string | null): string => {
     if (!input) return '';
 
@@ -100,6 +106,8 @@ export const formatarDataParaInput = (input: string | null): string => {
     return `${year}-${month}-${day}`;
 };
 
+// Funcao para formatar a data do tipo ISO para o formato dd/mm/yyyy
+// 2025-09-15 -> 15/09/2025
 export const formatarDataIso = (input: string | null): string => {
     if (!input) return '';
 
@@ -111,3 +119,44 @@ export const formatarDataIso = (input: string | null): string => {
 
     return `${day}/${month}/${year}`;
 }
+
+// Função para formatar a data no formato ISO (yyyy-mm-dd) para o formato de data legível
+// 2025-09-15T00:00:00Z -> "15/09/2025" (Formato padrão pt-BR)
+// Se o parâmetro `full` for verdadeiro, a data será formatada com o nome completo do mês e o ano completo.
+// 2025-09-15 -> "September 15, 2025"
+export function formatarData(dataISO: string, full = false) {
+    if (!dataISO) return "";
+
+    const partes = dataISO.split("T");
+    if (partes.length === 0) return "Data Inválida";
+
+    const [ano, mes, dia] = partes[0].split("-").map(Number);
+    const data = new Date(ano, mes - 1, dia);
+
+    if (isNaN(data.getTime())) return "Data Inválida";
+
+    if (full) {
+        return new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+        }).format(data);
+    }
+
+    return new Intl.DateTimeFormat("pt-BR").format(data);
+}
+
+// Usado na impressao da invoice pra transformar a cond. pag. que vem do banco para o padrao da invoice.
+const paymentTermsMap: Record<string, string> = {
+	"180D": "NET 180 DAYS",
+	"120D": "NET 120 DAYS",
+	"90D": "NET 90 DAYS",
+	"75D": "NET 75 DAYS",
+	"60D": "NET 60 DAYS",
+	"45D": "NET 45 DAYS",
+	"30D": "NET 30 DAYS",
+	"CAD": "CAD",
+	"pp": "PREPAID"
+}
+
+export const getPaymentTerm = (code: string): string => paymentTermsMap[code] || "Invalid Code";

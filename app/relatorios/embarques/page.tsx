@@ -4,7 +4,7 @@ import ReportFilterBar from "@/app/components/reports/FilterBar";
 import ShipmentTable from "@/app/components/reports/ShipmentTable";
 import StatusLegendFilter from "@/app/components/reports/StatusLegendFilter";
 import { shipmentRecord, ShipmentStatus } from "@/app/types";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
@@ -36,6 +36,10 @@ export default function EmbarquesReportPage() {
         return { portoData: porto, preparacaoData: preparacao };
     }, [response, statusFilter]);
 
+    useEffect(() => {
+        document.title = 'Relatório Embarques'; // Muda o título da página dinamicamente no lado do cliente
+    }, [])
+
     return (
         <div className="space-y-6 bg-gray-50">
             <header className="flex px-4 justify-between items-center">
@@ -50,21 +54,19 @@ export default function EmbarquesReportPage() {
                 <nav className="-mb-px flex space-x-6">
                     <button
                         onClick={() => setActiveTab('preparacao')}
-                        className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
-                            activeTab === 'preparacao'
-                                ? 'border-green-600 text-green-700 cursor-not-allowed' 
+                        className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === 'preparacao'
+                                ? 'border-green-600 text-green-700 cursor-not-allowed'
                                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 cursor-pointer'
-                        }`}
+                            }`}
                     >
                         Em Preparação ({preparacaoData.length})
                     </button>
                     <button
                         onClick={() => setActiveTab('porto')}
-                        className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${
-                            activeTab === 'porto'
+                        className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === 'porto'
                                 ? 'border-green-600 text-green-700 cursor-not-allowed'
                                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 cursor-pointer'
-                        }`}
+                            }`}
                     >
                         No Porto ({portoData.length})
                     </button>

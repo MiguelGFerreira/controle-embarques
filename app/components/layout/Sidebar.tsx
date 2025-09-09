@@ -1,6 +1,6 @@
 'use client';
 
-import { BarChart3, ChevronsLeft, ChevronsRight, LayoutDashboard, Settings, Ship } from "lucide-react";
+import { BarChart3, ChevronsLeft, ChevronsRight, LayoutDashboard, Receipt, Settings, Ship } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -16,6 +16,7 @@ const menuItems = [
         category: 'Gerenciamento',
         Items: [
             { href: '/gerenciamento/embarques', label: 'Embarques', icon: Ship },
+            { href: '/gerenciamento/invoice', label: 'Invoice', icon: Receipt },
         ],
     },
     {

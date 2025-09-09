@@ -23,7 +23,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-input {
+input, textarea {
   @apply mt-1 text-gray-500 block w-full pl-3 pr-2 py-2 text-base border border-gray-300 focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm rounded-md disabled:bg-gray-100;
 }
 
@@ -33,6 +33,10 @@ select {
 
 strong {
   @apply block text-gray-700;
+}
+
+.botao {
+  @apply bg-green-800 text-white font-semibold text-sm px-4 py-2 rounded-md hover:bg-green-600 cursor-pointer transition-all duration-300 disabled:bg-green-300;
 }
 
 .bg-tristao-trading {
