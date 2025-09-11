@@ -1,8 +1,11 @@
-import { Shipment, shipmentRecord, ShipmentStatus } from "@/app/types";
+import { shipmentRecord, ShipmentStatus } from "@/app/types";
 import LoadingSpinner from "../LoadingSpinner";
 import { formatarDataIso } from "@/app/utils";
-import { useState } from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ArrowDown, ArrowUp, ChevronDown, ChevronRight } from "lucide-react";
+
+type SortableKeys = keyof shipmentRecord;
+type SortDirection = 'ascending' | 'descending';
 
 const statusColorMap: Record<ShipmentStatus, string> = {
     'No Porto': 'bg-blue-200 text-blue-800',
@@ -87,6 +90,52 @@ interface ShipmentTableProps {
 }
 
 export default function ShipmentTable({ data, isLoading }: ShipmentTableProps) {
+    const [sortConfig, setSortConfig] = useState<{ key: SortableKeys, direction: SortDirection} | null>(null);
+
+    const sortedItems = useMemo(() => {
+        let sortableItems = [...data];
+        if (sortConfig !== null) {
+            sortableItems.sort((a, b) => {
+                const aValue = a[sortConfig.key];
+                const bValue = b[sortConfig.key];
+
+                if (aValue === null || aValue === '') return 1;
+                if (bValue === null || aValue === '') return -1;
+
+                if (aValue < bValue) {
+                    return sortConfig.direction === 'ascending' ? -1 : 1;
+                }
+                if (aValue > bValue) {
+                    return sortConfig.direction === 'ascending' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        return sortableItems;
+    }, [data, sortConfig]);
+
+    const requestSort = (key: SortableKeys) => {
+        let direction: SortDirection = 'ascending';
+        if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+            direction = 'descending';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const SortableHeader = ({ label, columnKey }: { label: string; columnKey: SortableKeys }) => {
+        const isSorted = sortConfig?.key === columnKey;
+        return (
+            <th className="cursor-pointer" onClick={() => requestSort(columnKey)}>
+                <div className="flex items-center gap-2">
+                    {label}
+                    {isSorted && (
+                        sortConfig.direction === 'ascending' ? <ArrowUp size={14} className="text-white" /> : <ArrowDown size={14} className="text-white" />
+                    )}
+                </div>
+            </th>
+        );
+    };
+
     if (isLoading) return <LoadingSpinner />;
     if (!data || data.length === 0) return <div className="text-center text-gray-700 p-8 bg-white rounded-md shadow">Nenhum registro encontrado.</div>;
 
@@ -97,19 +146,19 @@ export default function ShipmentTable({ data, isLoading }: ShipmentTableProps) {
                     <tr>
                         <th>Status</th>
                         <th>IDE</th>
-                        <th>ETA</th>
-                        <th>Retirada CTNR.</th>
-                        <th>Estufagem</th>
-                        <th>Chegada Porto</th>
-                        <th>Deadline Carga</th>
-                        <th>Deadline Draft</th>
+                        <SortableHeader label="ETA" columnKey="ETA" />
+                        <SortableHeader label="Retirada CTNR." columnKey="Retir. CTNR" />
+                        <SortableHeader label="Estufagem" columnKey="Dt. Estufagem" />
+                        <SortableHeader label="Chegada Porto" columnKey="Chegar Porto" />
+                        <SortableHeader label="Deadline Carga" columnKey="DeadLine Carga" />
+                        <SortableHeader label="Deadline Draft" columnKey="DeadLine Draft" />
                         <th>Destino</th>
                         <th>Ref. Importador</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((item) => <TableRow key={item.ID} item={item} />)}
+                    {sortedItems.map((item) => <TableRow key={item.ID} item={item} />)}
                 </tbody>
             </table>
         </div>

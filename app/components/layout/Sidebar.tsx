@@ -28,7 +28,7 @@ const menuItems = [
 ];
 
 export default function Sidebar() {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
     const pathname = usePathname();
 
     return (
