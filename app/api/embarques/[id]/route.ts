@@ -23,6 +23,14 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         }
     });
 
+    if (body['armador']) {
+        setClauses.push(`EEC_YARM = '${body['armador']}'`);
+    }
+    
+    if (body['despachante']) {
+        setClauses.push(`EEC_YDESPA = '${body['despachante']}'`);
+    }
+
     if (setClauses.length === 0) {
         return NextResponse.json({ message: 'Nenhum campo valido para atualizar' }, { status: 400 });
     }

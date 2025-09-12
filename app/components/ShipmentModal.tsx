@@ -3,9 +3,11 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import { FILIAL_NAMES, Shipment } from "../types";
 import { toast } from "sonner";
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { editableFieldsConfig } from "../utils";
 import FormField from "./FormField";
+import DespachanteLookUpModal from "./gerenciamento/embarques/DespachanteLookUpModal";
+import ArmadorLookUpModal from "./gerenciamento/embarques/ArmadorLookUpModal";
 
 interface ModalProps {
     shipment: Shipment | null;
@@ -16,6 +18,8 @@ interface ModalProps {
 export default function ShipmentModal({ shipment, onClose, onSave }: ModalProps) {
     const [formData, setFormData] = useState<Partial<Shipment>>({});
     const [isSaving, setIsSaving] = useState(false);
+    const [isDespachanteLookUpOpen, setIsDespachanteLookUpOpen] = useState(false);
+    const [isArmadorLookUpOpen, setIsArmadorLookUpOpen] = useState(false);
 
     const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -40,6 +44,20 @@ export default function ShipmentModal({ shipment, onClose, onSave }: ModalProps)
         }
     };
 
+    const handleDespachanteSelect = (despachante: { Chave: string, Descricao: string, }) => {
+        setFormData(prev => ({
+            ...prev,
+            "Cod Despacha": despachante.Chave,
+        }));
+    };
+
+    const handleArmadorSelect = (armador: { Codigo: string, Nome: string, }) => {
+        setFormData(prev => ({
+            ...prev,
+            "Cod. Arm": armador.Codigo,
+        }));
+    };
+
     if (!shipment) return null;
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,6 +71,14 @@ export default function ShipmentModal({ shipment, onClose, onSave }: ModalProps)
         editableFieldsConfig.forEach(field => {
             payload[field.key] = formData[field.key as keyof Shipment];
         });
+
+        if (formData["Cod. Arm"]) {
+            payload['armador'] = formData["Cod. Arm"]
+        }
+
+        if (formData["Cod Despacha"]) {
+            payload['despachante'] = formData["Cod Despacha"]
+        }
 
         try {
             const response = await fetch(`/api/embarques/${shipment.R_E_C_N_O_}`, {
@@ -85,7 +111,7 @@ export default function ShipmentModal({ shipment, onClose, onSave }: ModalProps)
         >
             <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
                 <header className="flex justify-between items-center p-4 border-b">
-                    <h2 className="text-xl font-bold text-gray-800"> Editar Datas - Embarque {shipment.Embarque}</h2>
+                    <h2 className="text-xl font-bold text-gray-800">Editar Datas - Embarque {shipment.Embarque}</h2>
                     <button onClick={onClose} className="text-gray-500 p-1 rounded-full hover:bg-gray-200 cursor-pointer"><X size={20} /></button>
                 </header>
 
@@ -111,6 +137,38 @@ export default function ShipmentModal({ shipment, onClose, onSave }: ModalProps)
                                 />
                             </div>
                         ))}
+                        <div>
+                            <label htmlFor="despachante" className="block text-sm font-medium text-gray-700">Despachante</label>
+                            <div className="flex">
+                                <input
+                                    id="despachante"
+                                    type="text"
+                                    value={formData["Cod Despacha"] || ''}
+                                    placeholder="Despachante"
+                                    className="bg-gray-200 cursor-not-allowed"
+                                    readOnly
+                                />
+                                <button type="button" onClick={() => setIsDespachanteLookUpOpen(true)} className="p-2 bg-green-100 text-green-700 rounded-md hover:bg-green-200 cursor-pointer">
+                                    <Search size={20} />
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="armador" className="block text-sm font-medium text-gray-700">Armador</label>
+                            <div className="flex">
+                                <input
+                                    id="armador"
+                                    type="text"
+                                    value={formData["Cod. Arm"] || ''}
+                                    placeholder="Armador"
+                                    className="bg-gray-200 cursor-not-allowed"
+                                    readOnly
+                                />
+                                <button type="button" onClick={() => setIsArmadorLookUpOpen(true)} className="p-2 bg-green-100 text-green-700 rounded-md hover:bg-green-200 cursor-pointer">
+                                    <Search size={20} />
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </main>
 
@@ -123,6 +181,18 @@ export default function ShipmentModal({ shipment, onClose, onSave }: ModalProps)
                     </button>
                 </footer>
             </div>
+
+            <DespachanteLookUpModal
+                isOpen={isDespachanteLookUpOpen}
+                onClose={() => setIsDespachanteLookUpOpen(false)}
+                onDespachanteSelect={handleDespachanteSelect}
+            />
+
+            <ArmadorLookUpModal
+                isOpen={isArmadorLookUpOpen}
+                onClose={() => setIsArmadorLookUpOpen(false)}
+                onArmadorSelect={handleArmadorSelect}
+            />
         </div>
     );
 }

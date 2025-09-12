@@ -6,7 +6,7 @@ import { Edit, Loader2, PlusCircle, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import useSWR from "swr";
 import LoadingSpinner from "./LoadingSpinner";
-import ClientLookUpModal from "./ClientLookUpModal";
+import ClientLookUpModal from "./gerenciamento/embarques/ClientLookUpModal";
 import { formatarDataParaInput, formatarDataView } from "../utils";
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());

@@ -30,6 +30,8 @@ export interface Shipment {
     'Inspecao Fitossanitaria': string | null; // sim ou nao
     'Invoice': string | null;
     'Dt. Invoice': string | null;
+    'Cod. Arm': string | '';
+    'Cod Despacha': string | '';
 }
 
 // resposta do get, incluindo paginacao
@@ -62,7 +64,8 @@ export interface Sample {
     R_E_C_N_O_: number;
 }
 
-export type ShipmentStatus = 'No Porto' | 'Amostra Aprovada' | 'Amostra Pendente' | 'Amostra Enviada' | 'Sem Amostra';
+// export type ShipmentStatus = 'No Porto' | 'Amostra Aprovada' | 'Amostra Pendente' | 'Amostra Enviada' | 'Sem Amostra';
+export type ShipmentStatus = 'No Porto' | 'Em preparação' | 'Embarcado';
 
 export interface shipmentRecord {
     Status: ShipmentStatus;

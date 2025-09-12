@@ -35,7 +35,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     LEFT JOIN SA1500 SA1 ON SA1.A1_COD = EXU.EXU_RKFCLI
         AND SA1.A1_LOJA = EXU.EXU_RKFLOJ
         AND SA1.D_E_L_E_T_ = ''
-    WHERE EXU_FILIAL = ${filial} AND EXU_PEDIDO = ${pedido} AND EXU.D_E_L_E_T_ = ''
+    WHERE EXU_FILIAL = ${filial} AND EXU_PEDIDO = '${pedido}' AND EXU.D_E_L_E_T_ = ''
     ORDER BY EXU.R_E_C_N_O_ DESC
     `;
 
@@ -52,6 +52,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
     const id = (await params).id;
     const body = await request.json();
+    let status = 'N';
 
     const shipmentInfoQuery = `
         SELECT TRIM(EEC_PEDREF) AS pedido, TRIM(EEC_FILIAL) AS filial
@@ -64,11 +65,16 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     }
     const { pedido, filial } = shipmentResult[0];
 
+    if (body.dtEnvio) {
+        status = 'E';
+    }
+
     const insertQuery = `
         INSERT INTO EXU500 (
             EXU_FILIAL
             ,EXU_NROAMO
             ,EXU_TIPOAM
+            ,EXU_STATUS
             ,EXU_PEDIDO
             ,EXU_QTD
             ,EXU_PESOBR
@@ -84,6 +90,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
             '${filial}'
             ,'${body.nroAmostra}'
             ,'${body.tipoAmostra}'
+            ,'${status}'
             ,'${pedido}'
             ,${body.quantidade}
             ,${body.pesoBruto}

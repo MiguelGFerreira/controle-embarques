@@ -12,11 +12,13 @@ export async function GET(request: Request) {
         SELECT
             -- COLUNA DE STATUS
             CASE
-                WHEN EEC.EEC_DTEMBA = '' AND D3.D3_TCENSEQ IS NOT NULL AND EXU.EXU_DTAPRO <> '' AND EEC.EEC_ENVAMO = '1' AND EXU.EXU_PEDIDO IS NOT NULL THEN 'No Porto'
-                WHEN EEC.EEC_ENVAMO = '1' AND EXU.EXU_PEDIDO IS NOT NULL AND EXU.EXU_DTAPRO <> '' AND D3.D3_TCENSEQ IS NULL THEN 'Amostra Aprovada'
-                WHEN EEC.EEC_ENVAMO = '1' AND EXU.EXU_PEDIDO IS NOT NULL AND EXU.EXU_DTENV<>'' AND  EXU.EXU_DTAPRO = '' AND EXU.EXU_DTREJE = ''  AND D3.D3_TCENSEQ IS NULL THEN 'Amostra Enviada'
-                WHEN EEC.EEC_ENVAMO = '1' AND EXU.EXU_PEDIDO IS NULL  AND D3.D3_TCENSEQ IS NULL THEN 'Amostra Pendente'
-                WHEN EEC.EEC_ENVAMO <> '1' THEN 'Sem Amostra'
+                WHEN EEC.EEC_DTEMBA = '' AND D3.D3_TCENSEQ IS NOT NULL THEN 'No Porto'
+				WHEN EEC.EEC_DTEMBA <> '' THEN 'Embarcado'
+				WHEN D3.D3_TCENSEQ IS NULL THEN 'Em preparação'
+                --WHEN EEC.EEC_ENVAMO = '1' AND EXU.EXU_PEDIDO IS NOT NULL AND EXU.EXU_DTAPRO <> '' AND D3.D3_TCENSEQ IS NULL THEN 'Amostra Aprovada'
+                --WHEN EEC.EEC_ENVAMO = '1' AND EXU.EXU_PEDIDO IS NOT NULL AND EXU.EXU_DTENV<>'' AND  EXU.EXU_DTAPRO = '' AND EXU.EXU_DTREJE = ''  AND D3.D3_TCENSEQ IS NULL THEN 'Amostra Enviada'
+                --WHEN EEC.EEC_ENVAMO = '1' AND EXU.EXU_PEDIDO IS NULL  AND D3.D3_TCENSEQ IS NULL THEN 'Amostra Pendente'
+                --WHEN EEC.EEC_ENVAMO <> '1' THEN 'Sem Amostra'
             END AS [Status],
 
             -- PRINCIPAIS
@@ -68,12 +70,16 @@ export async function GET(request: Request) {
             AND D3.D3_EMISSAO >= D2.D2_EMISSAO
             AND D3.D3_TCENSEQ = D2.D2_NUMSEQ
             AND D3.D_E_L_E_T_ = ''
-        LEFT JOIN EXU500 EXU WITH (NOLOCK) ON EXU.EXU_FILIAL = EEC.EEC_FILIAL
-            AND EXU.EXU_PEDIDO = EEC.EEC_PEDREF
-            AND EXU.D_E_L_E_T_ = ''
+        OUTER APPLY (
+			SELECT TOP 1 * FROM EXU500 EXUT WITH (NOLOCK)
+			WHERE EXUT.EXU_FILIAL = EEC.EEC_FILIAL
+				AND EXUT.EXU_PEDIDO = EEC.EEC_PEDREF
+				AND EXUT.D_E_L_E_T_ = ''
+			ORDER BY EXUT.R_E_C_N_O_ DESC
+			) EXU
         -- Subquery para embalagens
         OUTER APPLY (
-            SELECT SUM(EE9.EE9_QTDEM1) AS QTD
+            SELECT SUM(EE9.EE9_SLDINI) AS QTD
                 ,EE9.EE9_EMBAL1 AS EMBALAGEM
             FROM EE9500 EE9 WITH (NOLOCK)
             WHERE EE9.EE9_FILIAL = EEC.EEC_FILIAL

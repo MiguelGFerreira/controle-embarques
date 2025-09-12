@@ -11,6 +11,7 @@ export interface EditableField {
     type: FieldType;
     maxLength?: number;
     options?: SelectOption[];
+    lookup?: string;
 }
 
 export const editableFieldsConfig: EditableField[] = [
