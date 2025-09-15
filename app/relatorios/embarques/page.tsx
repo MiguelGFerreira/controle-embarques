@@ -2,7 +2,6 @@
 
 import ReportFilterBar from "@/app/components/reports/FilterBar";
 import ShipmentTable from "@/app/components/reports/ShipmentTable";
-import StatusLegendFilter from "@/app/components/reports/StatusLegendFilter";
 import { shipmentRecord, ShipmentStatus } from "@/app/types";
 import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";

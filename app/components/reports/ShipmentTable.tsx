@@ -28,16 +28,16 @@ function ExpandedDetails({ item }: { item: shipmentRecord }) {
 
     return (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-3 p-4 bg-green-50/40">
-            <DetailItem label="Booking" value={item["Nr. Booking"]} />
-            <DetailItem label="Prazo Freetime" value={item["Prazo Freetime"]} />
+            <DetailItem label="Booking" value={item.Nr_Booking} />
+            <DetailItem label="Prazo Freetime" value={item.Prazo_Freetime} />
             <DetailItem label="Rota" value={item.Rota} />
             <DetailItem label="Navio" value={item.Navio} />
             <DetailItem label="Quantidade (Kg)" value={item.Quantidade} />
             <DetailItem label="Invoice" value={item.Invoice} />
             <DetailItem label="Viagem" value={item.Viagem} />
             <DetailItem label="Fumigação" value={item.Fumigacao} />
-            <DetailItem label="Local Fumigação" value={item["Local Fumigacao"]} />
-            <DetailItem label="Inspeção Fito." value={item["Inspecao Fitossanitaria"]} />
+            <DetailItem label="Local Fumigação" value={item.Local_Fumigacao} />
+            <DetailItem label="Inspeção Fito." value={item.Inspecao_Fitossanitaria} />
         </div>
     )
 }
@@ -53,6 +53,8 @@ function TableRow({ item }: { item: shipmentRecord }) {
     //     'Sem Amostra': 'bg-gray-200 text-gray-800',
     // }
 
+    console.log(item);
+
     return (
         <>
             <tr className="hover:bg-gray-50 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
@@ -64,11 +66,11 @@ function TableRow({ item }: { item: shipmentRecord }) {
                 <td>{Math.floor(item.Quantidade / 60)}</td>
                 <td>{item.IDE}</td>
                 <td>{formatarDataIso(item.ETA)}</td>
-                <td>{formatarDataIso(item["Retir. CTNR"])}</td>
-                <td>{formatarDataIso(item["Dt. Estufagem"])}</td>
-                <td>{formatarDataIso(item["Chegar Porto"])}</td>
-                <td>{formatarDataIso(item["DeadLine Carga"])}</td>
-                <td>{formatarDataIso(item["DeadLine Draft"])}</td>
+                <td>{formatarDataIso(item.Retir_CTNR)}</td>
+                <td>{formatarDataIso(item.Dt_Estufagem)}</td>
+                <td>{formatarDataIso(item.Chegar_Porto)}</td>
+                <td>{formatarDataIso(item.DeadLine_Carga)}</td>
+                <td>{formatarDataIso(item.DeadLine_Draft)}</td>
                 <td>{item.Destino}</td>
                 <td>{item.Ref_Import}</td>
                 <td>
@@ -150,11 +152,11 @@ export default function ShipmentTable({ data, isLoading }: ShipmentTableProps) {
                         <th>Sacas</th>
                         <th>IDE</th>
                         <SortableHeader label="ETA" columnKey="ETA" />
-                        <SortableHeader label="Retirada CTNR." columnKey="Retir. CTNR" />
-                        <SortableHeader label="Estufagem" columnKey="Dt. Estufagem" />
-                        <SortableHeader label="Chegada Porto" columnKey="Chegar Porto" />
-                        <SortableHeader label="Deadline Carga" columnKey="DeadLine Carga" />
-                        <SortableHeader label="Deadline Draft" columnKey="DeadLine Draft" />
+                        <SortableHeader label="Retirada CTNR." columnKey="Retir_CTNR" />
+                        <SortableHeader label="Estufagem" columnKey="Dt_Estufagem" />
+                        <SortableHeader label="Chegada Porto" columnKey="Chegar_Porto" />
+                        <SortableHeader label="Deadline Carga" columnKey="DeadLine_Carga" />
+                        <SortableHeader label="Deadline Draft" columnKey="DeadLine_Draft" />
                         <th>Destino</th>
                         <th>Ref. Importador</th>
                         <th></th>

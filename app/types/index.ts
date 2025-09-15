@@ -79,25 +79,25 @@ export interface shipmentRecord {
     Embalagem: string;
     Quantidade: number;
     Obs_Planilha: string;
-    'Prazo Freetime': string;
-	'Nr. Booking': string;
+    Prazo_Freetime: string;
+	Nr_Booking: string;
 	Rota: string;
 	Invoice: string;
-	'Inspecao Fitossanitaria': string;
+	Inspecao_Fitossanitaria: string;
 	Viagem: string;
 	Fumigacao: string;
-    'Local Fumigacao': string;
-    'Material Fumigacao': string;
-    'Retir. CTNR': string;
-    'Dt. Estufagem': string;
-	'Chegar Porto': string;
+    Local_Fumigacao: string;
+    Material_Fumigacao: string;
+    Retir_CTNR: string;
+    Dt_Estufagem: string;
+	Chegar_Porto: string;
 	ETA: string;
-    'Dt. Conhec.': string;
-    'Dt. Fumigacao': string;
-    'Dt. Insp Fitossan.': string;
-    'DeadLine Draft': string;
-    'DeadLine Carga': string;
-    'Dt. Invoice': string;
+    Dt_Conhec: string;
+    Dt_Fumigacao: string;
+    Dt_Insp_Fitossan: string;
+    DeadLine_Draft: string;
+    DeadLine_Carga: string;
+    Dt_Invoice: string;
 }
 
 export interface Invoice {
