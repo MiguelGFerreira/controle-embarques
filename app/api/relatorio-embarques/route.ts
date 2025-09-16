@@ -7,6 +7,17 @@ export async function GET(request: Request) {
     const filial = searchParams.get('filial') || '20';
     const mes = searchParams.get('mes') || new Date().getMonth() + 1;
     const ano = searchParams.get('ano') || new Date().getFullYear();
+    const ide = searchParams.get('ide') || '';
+
+    let whereClauses = ["EEC.D_E_L_E_T_ = ''"]
+
+    if (ide) {
+        whereClauses.push(`UPPER(EEC_PEDREF) LIKE '%${ide.toUpperCase()}%'`);
+    } else {
+        whereClauses.push(`EEC.EEC_FILIAL = '${filial}'`);
+        whereClauses.push(`MONTH(EEC.EEC_ETA) = '${mes}'`);
+        whereClauses.push(`YEAR(EEC.EEC_ETA) = '${ano}'`);
+    }
 
     const query = `
         SELECT
@@ -43,6 +54,8 @@ export async function GET(request: Request) {
             CASE EEC.EEC_YFUMIG WHEN '1' THEN 'Sim' WHEN '2' THEN 'Nao' ELSE '' END AS [Fumigacao],
             TRIM(EEC.EEC_YLFUMI) [Local_Fumigacao],
             TRIM(EEC.EEC_YMFUMI) [Material_Fumigacao],
+            TRIM(SY5.Y5_NOME) [Armador],
+	        TRIM(SX5.X5_DESCRI) [Despachante],
             CASE WHEN EEC_ETD = '' THEN NULL ELSE CAST(EEC_ETD AS DATE) END AS [Retir_CTNR],
             CASE WHEN EEC_YESTUF = '' THEN NULL ELSE CAST(EEC_YESTUF AS DATE) END AS [Dt_Estufagem],
             CASE WHEN EEC_DTFCPR = '' THEN NULL ELSE CAST(EEC_DTFCPR AS DATE) END AS [Chegar_Porto],
@@ -69,7 +82,14 @@ export async function GET(request: Request) {
             AND D3.D3_COD = D2.D2_COD
             AND D3.D3_EMISSAO >= D2.D2_EMISSAO
             AND D3.D3_TCENSEQ = D2.D2_NUMSEQ
+            AND D3.D3_ESTORNO = ''
             AND D3.D_E_L_E_T_ = ''
+        LEFT JOIN SY5500 SY5 WITH (NOLOCK) ON SY5.Y5_COD = EEC.EEC_YARM
+            AND SY5.D_E_L_E_T_ = ''
+        LEFT JOIN SX5500 SX5 WITH (NOLOCK) ON SX5.X5_FILIAL = EEC.EEC_FILIAL
+            AND SX5.X5_TABELA = 'WD'
+            AND SX5.X5_CHAVE = EEC.EEC_YDESPA
+            AND SX5.D_E_L_E_T_ = ''
         OUTER APPLY (
 			SELECT TOP 1 * FROM EXU500 EXUT WITH (NOLOCK)
 			WHERE EXUT.EXU_FILIAL = EEC.EEC_FILIAL
@@ -87,11 +107,7 @@ export async function GET(request: Request) {
                 AND EE9.D_E_L_E_T_ = ''
             GROUP BY EE9.EE9_EMBAL1
             ) EE9
-        WHERE
-            EEC.EEC_FILIAL = '${filial}'
-            AND MONTH(EEC.EEC_ETA) = '${mes}'
-            AND YEAR(EEC.EEC_ETA) = '${ano}'
-            AND EEC.D_E_L_E_T_ = ''
+        WHERE ${whereClauses.join(" AND ")}
         ORDER BY
             EEC.EEC_ETA;
     `;

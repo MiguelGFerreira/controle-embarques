@@ -4,6 +4,7 @@ import ReportFilterBar from "@/app/components/reports/FilterBar";
 import ShipmentTable from "@/app/components/reports/ShipmentTable";
 import { shipmentRecord, ShipmentStatus } from "@/app/types";
 import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import useSWR from "swr";
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
@@ -14,11 +15,18 @@ export default function EmbarquesReportPage() {
         filial: '20',
         mes: String(today.getMonth() + 1),
         ano: String(today.getFullYear()),
+        ide: '',
     });
     const [activeTab, setActiveTab] = useState<'Em preparação' | 'No porto' | 'Embarcado'>('Em preparação');
     const [statusFilter, setStatusFilter] = useState<ShipmentStatus[]>([]);
 
-    const apiUrl = `/api/relatorio-embarques?filial=${filters.filial}&mes=${filters.mes}&ano=${filters.ano}`;
+    let apiUrl = '/api/relatorio-embarques';
+    if (filters.ide) {
+        apiUrl += `?ide=${filters.ide}`;
+    } else {
+        apiUrl += `?filial=${filters.filial}&mes=${filters.mes}&ano=${filters.ano}`
+    }
+
     const { data: response, error, isLoading } = useSWR(apiUrl, fetcher, { keepPreviousData: true });
 
     // iseMemo pra otimizar a separacao e filtragem dos dados
@@ -33,6 +41,8 @@ export default function EmbarquesReportPage() {
         // if (statusFilter.length > 0) {
         //     preparacao = preparacao.filter((item: shipmentRecord) => statusFilter.includes(item.Status));
         // }
+
+        filters.ide && toast.info(`Exibindo resultados apenas para ides com o texto ${filters.ide}`);
 
         return { portoData: porto, preparacaoData: preparacao, embarcadoData: embarcado };
     }, [response, statusFilter]);

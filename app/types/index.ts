@@ -98,6 +98,8 @@ export interface shipmentRecord {
     DeadLine_Draft: string;
     DeadLine_Carga: string;
     Dt_Invoice: string;
+    Armador: string;
+    Despachante: string;
 }
 
 export interface Invoice {

@@ -33,11 +33,17 @@ function ExpandedDetails({ item }: { item: shipmentRecord }) {
             <DetailItem label="Rota" value={item.Rota} />
             <DetailItem label="Navio" value={item.Navio} />
             <DetailItem label="Quantidade (Kg)" value={item.Quantidade} />
+            <DetailItem label="Embalagem" value={item.Embalagem} />
             <DetailItem label="Invoice" value={item.Invoice} />
             <DetailItem label="Viagem" value={item.Viagem} />
             <DetailItem label="Fumigação" value={item.Fumigacao} />
+            <DetailItem label="Data Fumigação" value={formatarDataIso(item.Dt_Fumigacao)} />
             <DetailItem label="Local Fumigação" value={item.Local_Fumigacao} />
             <DetailItem label="Inspeção Fito." value={item.Inspecao_Fitossanitaria} />
+            <DetailItem label="Data Inspeção Fito." value={formatarDataIso(item.Dt_Insp_Fitossan)} />
+            <DetailItem label="Armador" value={item.Armador} />
+            <DetailItem label="Despachante" value={item.Despachante} />
+            <DetailItem label="Obs." value={item.Obs_Planilha} />
         </div>
     )
 }
@@ -150,7 +156,7 @@ export default function ShipmentTable({ data, isLoading }: ShipmentTableProps) {
                     <tr>
                         {/* <th>Status</th> */}
                         <th>Sacas</th>
-                        <th>IDE</th>
+                        <SortableHeader label="IDE" columnKey="IDE" />
                         <SortableHeader label="ETA" columnKey="ETA" />
                         <SortableHeader label="Retirada CTNR." columnKey="Retir_CTNR" />
                         <SortableHeader label="Estufagem" columnKey="Dt_Estufagem" />

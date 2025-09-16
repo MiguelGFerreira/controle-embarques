@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Filters {
     filial: string;
     mes: string;
     ano: string;
+    ide: string;
 }
 
 interface ReportFilterBarProps {
@@ -32,8 +33,30 @@ export default function ReportFilterBar({ initialFilters, onFilterChange }: Repo
         onFilterChange(filters);
     };
 
+    useEffect(() => {
+        const filial = document.getElementById('filial') as HTMLSelectElement | null;
+        const mes = document.getElementById('mes') as HTMLSelectElement | null;
+        const ano = document.getElementById('ano') as HTMLSelectElement | null;
+
+        const shouldDisable = !!filters.ide;
+
+        if (filial) filial.disabled = shouldDisable;
+        if (mes) mes.disabled = shouldDisable;
+        if (ano) ano.disabled = shouldDisable;
+    }, [filters.ide])
+
     return (
         <div className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm border">
+            <div className="flex flex-col">
+                <label htmlFor="ide" className="text-xs font-medium text-gray-600 mb-1">IDE</label>
+                <input
+                    type="text"
+                    id="ide"
+                    value={filters.ide}
+                    onChange={(e) => setFilters(prev => ({ ...prev, ide: e.target.value }))}
+                />
+            </div>
+
             <div className="flex flex-col">
                 <label htmlFor="filial" className="text-xs font-medium text-gray-600 mb-1">Filial</label>
                 <select
