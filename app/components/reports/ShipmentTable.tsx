@@ -59,8 +59,6 @@ function TableRow({ item }: { item: shipmentRecord }) {
     //     'Sem Amostra': 'bg-gray-200 text-gray-800',
     // }
 
-    console.log(item);
-
     return (
         <>
             <tr className="hover:bg-gray-50 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>

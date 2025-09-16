@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { FILIAL_NAMES, Shipment } from "../types";
 import { toast } from "sonner";
 import { Search, X } from "lucide-react";
@@ -60,8 +60,26 @@ export default function ShipmentModal({ shipment, onClose, onSave }: ModalProps)
 
     if (!shipment) return null;
 
+    const menorUmAno = (date: Date) => {
+        if (!(date instanceof Date) || isNaN(date.getTime())) return true;
+        const oneYearAgo = new Date();
+        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+        return date >= oneYearAgo;
+    }
+
+    const handleDataBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const date = e.target.valueAsDate;
+        if (!date) {
+            return;
+        }
+        if (!menorUmAno(date)) {
+            toast.warning("Data inválida. A data deve ser de no máximo 1 ano atrás.")
+        }
+    }
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const { name, value, type } = e.target;
+
         setFormData(prev => ({ ...prev, [name]: value }));
     }
 
@@ -134,6 +152,7 @@ export default function ShipmentModal({ shipment, onClose, onSave }: ModalProps)
                                     value={formData[field.key as keyof Shipment]}
                                     maxLength={field.maxLength}
                                     onChange={handleInputChange}
+                                    onBlur={handleDataBlur}
                                 />
                             </div>
                         ))}

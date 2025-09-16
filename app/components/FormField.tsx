@@ -1,4 +1,4 @@
-export default function FormField({ field, value, onChange, maxLength }: any) {
+export default function FormField({ field, value, onChange, maxLength, onBlur }: any) {
     const commomProps = {
         id: field.key,
         name: field.key,
@@ -8,7 +8,7 @@ export default function FormField({ field, value, onChange, maxLength }: any) {
 
     switch (field.type) {
         case 'date':
-            return <input type="date" maxLength={maxLength} {...commomProps} />;
+            return <input type="date" maxLength={maxLength} onBlur={onBlur} {...commomProps} />;
         case 'text':
             return <input type="text" maxLength={maxLength} {...commomProps} />;
         case 'select':
