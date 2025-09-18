@@ -80,18 +80,18 @@ export interface shipmentRecord {
     Quantidade: number;
     Obs_Planilha: string;
     Prazo_Freetime: string;
-	Nr_Booking: string;
-	Rota: string;
-	Invoice: string;
-	Inspecao_Fitossanitaria: string;
-	Viagem: string;
-	Fumigacao: string;
+    Nr_Booking: string;
+    Rota: string;
+    Invoice: string;
+    Inspecao_Fitossanitaria: string;
+    Viagem: string;
+    Fumigacao: string;
     Local_Fumigacao: string;
     Material_Fumigacao: string;
     Retir_CTNR: string;
     Dt_Estufagem: string;
-	Chegar_Porto: string;
-	ETA: string;
+    Chegar_Porto: string;
+    ETA: string;
     Dt_Conhec: string;
     Dt_Fumigacao: string;
     Dt_Insp_Fitossan: string;
@@ -103,57 +103,68 @@ export interface shipmentRecord {
 }
 
 export interface Invoice {
-	NUMERO_INVOICE: string,
-	ID: number,
-	NUMERO_EMBARQUE: string,
-	FILIAL: number,
-	PEDIDO: string,
-	PO: string,
-	DATA_PEDIDO: string,
-	CONDICAO_PAGAMENTO: string,
-	SITUACAO_PEDIDO: string,
-	PORTO_ORIGEM: string,
-	CLIENTE: string,
-	COD_PAIS: string,
-	MOEDA: string,
-	INCOTERM: string,
-	PAISDEST: string,
-	LOCAL_DESTINO: string,
-	ENDERECO_CLIENTE: string,
-	NIF: string,
-	EMBALAGEM: string,
-	QTD_EMB: number,
-	PRECO_UNIT: number,
-	PRECO_60KG: number,
-	PRECO_CENT_LIB: number,
-	PRECO_TONELADAS: number,
-	PRECO_50KG: number,
-	REF_IMPORTACAO: string,
-	PESO_LIQUIDO: number,
-	PESO_BRUTO: number,
-	DOCUMENTOS: string,
-	SACAS: number,
-	EMBARQUE: string,
-	STATUS_EMBARQUE: string,
-	DATA_EMBARQUE: string,
-	DATA_CONHECIMENTO: string,
-	PEDIDO_EXPORTACAO: string,
-	VIA: string,
-	DATA_INVOICE: string,
-	BL: string,
-	VALOR_INVOICE: number,
-	NUMERO_DUE: string,
-	CHAVE_DUE: string,
-	DATA_DUE: string,
-	SHIPPED_PER: string,
-	OIC: string,
-	COND_PAG: string,
-	DESCRIPTION: string,
-	PRECO_FORMATADO: number,
-	QUALIDADE: string,
-	MARCACOES: string,
-	MARCACOES2: string,
-	BCO_CLIENTE: string,
-	END_BCO_CLIENTE: string,
-	OBSERVACAO: string,
+    NUMERO_INVOICE: string,
+    ID: number,
+    NUMERO_EMBARQUE: string,
+    FILIAL: number,
+    PEDIDO: string,
+    PO: string,
+    DATA_PEDIDO: string,
+    CONDICAO_PAGAMENTO: string,
+    SITUACAO_PEDIDO: string,
+    PORTO_ORIGEM: string,
+    CLIENTE: string,
+    COD_PAIS: string,
+    MOEDA: string,
+    INCOTERM: string,
+    PAISDEST: string,
+    LOCAL_DESTINO: string,
+    ENDERECO_CLIENTE: string,
+    NIF: string,
+    EMBALAGEM: string,
+    QTD_EMB: number,
+    PRECO_UNIT: number,
+    PRECO_60KG: number,
+    PRECO_CENT_LIB: number,
+    PRECO_TONELADAS: number,
+    PRECO_50KG: number,
+    REF_IMPORTACAO: string,
+    PESO_LIQUIDO: number,
+    PESO_BRUTO: number,
+    DOCUMENTOS: string,
+    SACAS: number,
+    EMBARQUE: string,
+    STATUS_EMBARQUE: string,
+    DATA_EMBARQUE: string,
+    DATA_CONHECIMENTO: string,
+    PEDIDO_EXPORTACAO: string,
+    VIA: string,
+    DATA_INVOICE: string,
+    BL: string,
+    VALOR_INVOICE: number,
+    NUMERO_DUE: string,
+    CHAVE_DUE: string,
+    DATA_DUE: string,
+    SHIPPED_PER: string,
+    OIC: string,
+    COND_PAG: string,
+    DESCRIPTION: string,
+    PRECO_FORMATADO: number,
+    QUALIDADE: string,
+    MARCACOES: string,
+    MARCACOES2: string,
+    BCO_CLIENTE: string,
+    END_BCO_CLIENTE: string,
+    OBSERVACAO: string,
+}
+
+export interface ShipmentDestinations {
+    Filial: string;
+    Embarque: string;
+    Pais_Dest_Sigla: string;
+    Cod_Siscomex: string;
+    Pais_Dest: string;
+    Data_Embarque: string;
+    Produto: 'ARA' | 'CON';
+    Quantidade: Number;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { BarChart3, ChevronsLeft, ChevronsRight, LayoutDashboard, Receipt, Settings, Ship } from "lucide-react";
+import { BarChart3, ChartArea, ChevronsLeft, ChevronsRight, LayoutDashboard, Receipt, Settings, Ship } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -23,6 +23,7 @@ const menuItems = [
         category: 'Relatórios',
         Items: [
             { href: '/relatorios/embarques', label: 'Embarques', icon: BarChart3 },
+            { href: '/relatorios/dashboard-embarques', label: 'Dashboards', icon: ChartArea },
         ],
     },
 ];
