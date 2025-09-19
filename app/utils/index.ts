@@ -1,3 +1,5 @@
+import { ShipmentDestinations } from "../types";
+
 export type FieldType = 'text' | 'select' | 'date';
 
 export interface SelectOption {
@@ -149,15 +151,46 @@ export function formatarData(dataISO: string, full = false) {
 
 // Usado na impressao da invoice pra transformar a cond. pag. que vem do banco para o padrao da invoice.
 const paymentTermsMap: Record<string, string> = {
-	"180D": "NET 180 DAYS",
-	"120D": "NET 120 DAYS",
-	"90D": "NET 90 DAYS",
-	"75D": "NET 75 DAYS",
-	"60D": "NET 60 DAYS",
-	"45D": "NET 45 DAYS",
-	"30D": "NET 30 DAYS",
-	"CAD": "CAD",
-	"pp": "PREPAID"
+    "180D": "NET 180 DAYS",
+    "120D": "NET 120 DAYS",
+    "90D": "NET 90 DAYS",
+    "75D": "NET 75 DAYS",
+    "60D": "NET 60 DAYS",
+    "45D": "NET 45 DAYS",
+    "30D": "NET 30 DAYS",
+    "CAD": "CAD",
+    "pp": "PREPAID"
 }
 
 export const getPaymentTerm = (code: string): string => paymentTermsMap[code] || "Invalid Code";
+
+/** Converte array da API para formato do react-svg-worldmap:
+ * [{ country: 'br', value: 123 }, ...]
+ * - ignora linhas sem Cod_Pais
+ * - soma Quantidade por país
+ * - opcional: filtra por produto (ex: 'ARA'|'CON') se quiser
+ */
+export function shipmentsToWorldmap(rows: ShipmentDestinations[], opts?: { product?: string | null; minValueToInclude?: number }) {
+    const { product = null, minValueToInclude = 0 } = opts || {};
+
+    console.log("linas:", rows);
+
+    const map = rows.reduce<Record<string, number>>((acc, r) => {
+        const iso = r.Cod_Pais ? String(r.Cod_Pais).trim().toLowerCase() : '';
+
+        if (product && r.Produto !== product) return acc; // se filtrando por produto
+
+        const qty = parseFloat(`${r.Quantidade}`);
+        acc[iso] = (acc[iso] || 0) + qty;
+        return acc;
+    }, {});
+
+    console.log("seu mapa:", map);
+
+    const arr = Object.entries(map)
+        .map(([country, value]) => ({ country, value }))
+        .filter(item => item.value > minValueToInclude)
+        .sort((a, b) => b.value - a.value); // ordenar do maior para o menor (acho que nem precisa)
+
+    return arr;
+}

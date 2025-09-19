@@ -162,9 +162,9 @@ export interface ShipmentDestinations {
     Filial: string;
     Embarque: string;
     Pais_Dest_Sigla: string;
-    Cod_Siscomex: string;
+    Cod_Pais: string;
     Pais_Dest: string;
     Data_Embarque: string;
     Produto: 'ARA' | 'CON';
-    Quantidade: Number;
+    Quantidade: number;
 }

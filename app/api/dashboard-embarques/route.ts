@@ -7,7 +7,7 @@ export async function GET() {
         SELECT EEC_FILIAL [Filial]
             ,TRIM(EEC_PREEMB) [Embarque]
             ,EEC_DEST [Pais_Destino_Sigla]
-            ,Y9_PAIS [Cod_Siscomex]
+            ,CASE EEC_DEST WHEN 'TBI' THEN 'br' ELSE LOWER(C08_SIGLA2) END AS [Cod_Pais]
             ,TRIM(Y9_DESCR) [Pais_Dest]
             ,CAST(EEC_DTEMBA AS DATE) [Data_Embarque]
             ,LEFT(EE9_COD_I,3) [Produto]
@@ -18,12 +18,14 @@ export async function GET() {
             AND EE9500.D_E_L_E_T_ = ''
         INNER JOIN SY9500 ON EEC_DEST = Y9_SIGLA
             AND SY9500.D_E_L_E_T_ = ''
+        LEFT JOIN C08500 ON Y9_PAIS = C08_PAISSX
+	        AND C08500.D_E_L_E_T_ = ''
         WHERE EEC500.D_E_L_E_T_ = ''
             AND EEC_DTEMBA >= GETDATE()-365
         GROUP BY EEC_FILIAL
             ,EEC_PREEMB
             ,EEC_DEST
-            ,Y9_PAIS
+            ,C08_SIGLA2
             ,EEC_DTEMBA
             ,LEFT(EE9_COD_I,3)
             ,Y9_DESCR

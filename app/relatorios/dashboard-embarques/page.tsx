@@ -1,4 +1,5 @@
 import MonthlyShipmentsChart from "@/app/components/charts/MonthlyShipmentsChart";
+import WorldShipmentsMap from "@/app/components/charts/WorldShipmentsMap";
 
 export default function DashboardEmbarquesPage() {
     return (
@@ -13,6 +14,8 @@ export default function DashboardEmbarquesPage() {
             </header>
 
             <MonthlyShipmentsChart />
+
+            <WorldShipmentsMap />
 
         </div>
     );
