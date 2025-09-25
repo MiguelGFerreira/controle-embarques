@@ -65,7 +65,7 @@ export interface Sample {
 }
 
 // export type ShipmentStatus = 'No Porto' | 'Amostra Aprovada' | 'Amostra Pendente' | 'Amostra Enviada' | 'Sem Amostra';
-export type ShipmentStatus = 'No Porto' | 'Em preparação' | 'Embarcado';
+export type ShipmentStatus = 'No Porto' | 'Em preparação' | 'Embarcado' | 'Pedido';
 
 export interface shipmentRecord {
     Status: ShipmentStatus;

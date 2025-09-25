@@ -9,14 +9,24 @@ export async function GET(request: Request) {
     const ano = searchParams.get('ano') || new Date().getFullYear();
     const ide = searchParams.get('ide') || '';
 
-    let whereClauses = ["EEC.D_E_L_E_T_ = ''"]
+    const whereClausesFirst = ["EEC.D_E_L_E_T_ = ''"]
+
+    const whereClausesSecond = ["EE9.R_E_C_N_O_ IS NULL"]
+    whereClausesSecond.push("EE8.EE8_STATUS <> '*'")
+    whereClausesSecond.push("EE8.D_E_L_E_T_ = ''")
 
     if (ide) {
-        whereClauses.push(`UPPER(EEC_PEDREF) LIKE '%${ide.toUpperCase()}%'`);
+        whereClausesFirst.push(`UPPER(EEC_PEDREF) LIKE '%${ide.toUpperCase()}%'`);
+        
+        whereClausesSecond.push(`UPPER(EE8_PEDIDO) LIKE '%${ide.toUpperCase()}%'`);
     } else {
-        whereClauses.push(`EEC.EEC_FILIAL = '${filial}'`);
-        whereClauses.push(`MONTH(EEC.EEC_ETA) = '${mes}'`);
-        whereClauses.push(`YEAR(EEC.EEC_ETA) = '${ano}'`);
+        whereClausesFirst.push(`EEC.EEC_FILIAL = '${filial}'`);
+        whereClausesFirst.push(`MONTH(EEC.EEC_ETA) = '${mes}'`);
+        whereClausesFirst.push(`YEAR(EEC.EEC_ETA) = '${ano}'`);
+
+        whereClausesSecond.push(`EE8.EE8_FILIAL = '${filial}'`);
+        whereClausesSecond.push(`MONTH(EE8.EE8_DTPREM) = '${mes}'`);
+        whereClausesSecond.push(`YEAR(EE8.EE8_DTPREM) = '${ano}'`);
     }
 
     const query = `
@@ -107,9 +117,60 @@ export async function GET(request: Request) {
                 AND EE9.D_E_L_E_T_ = ''
             GROUP BY EE9.EE9_EMBAL1
             ) EE9
-        WHERE ${whereClauses.join(" AND ")}
+        WHERE ${whereClausesFirst.join(" AND ")}
+        
+        UNION ALL
+
+        SELECT 'Pedido'			-- STATUS
+            ,EE8.EE8_PEDIDO		-- IDE
+            ,''					-- NAVIO
+            ,''					-- DESTINO
+            ,CASE EE8.EE8_FILIAL WHEN '20' THEN 'VARG' ELSE 'VIAN' END AS [ARM]
+            ,''
+            ,EE7.EE7_REFIMP		-- REFERENCIA IMPORTADOR
+            ,EE9.EE9_EMBAL1		-- EMBALAGEM
+            ,''					-- QUANTIDADE
+            ,''					-- OBS PLANILHA
+            ,EE8.R_E_C_N_O_		-- ID
+            
+            -- SECUNDARIOS
+            ,''					-- PRAZO FREETIME
+            ,''					-- NR BOOKING
+            ,''					-- ROTA
+            ,''					-- INOVICE
+            ,''					-- INSPECAO FITOSSANITARIA
+            ,''					-- VIAGEM
+            ,''					-- FUMIGACAO
+            ,''					-- LOCAL FUMIGACAO
+            ,''					-- MATERIAL FUMIGACAO
+            ,''					-- ARMADOR
+            ,''					-- DESPACHANTE
+            ,NULL				-- RETIR CNTR
+            ,NULL				-- DT ESTUFAGEM
+            ,NULL				-- CHEGAR PORTO
+            ,EE8.EE8_DTPREM		-- ETA
+            ,NULL				-- DT CONHEC
+            ,NULL				-- DT FUMIGACAO
+            ,NULL				-- DT INSP FITOSSAN
+            ,NULL				-- DEADLINE DRAFT
+            ,NULL				-- DEADLINE CARGA
+            ,NULL				-- DT INVOICE
+        FROM EE8500 EE8 WITH (NOLOCK)
+        LEFT JOIN EE9500 EE9 WITH (NOLOCK) ON EE8.EE8_FILIAL = EE9.EE9_FILIAL
+            AND EE8.EE8_PEDIDO = EE9.EE9_PEDIDO
+            --AND EE8.EE8_SEQUEN = EE9.EE9_SEQUEN
+            AND EE8.EE8_FORN = EE9.EE9_FORN		--FORNECEDOR ESTA TRISTAO NAS DUAS
+            AND EE8.EE8_FOLOJA = EE9.EE9_FOLOJA
+            --AND EE8.EE8_COD_I = EE9.EE9_COD_I
+            AND EE9.D_E_L_E_T_ = ''
+        LEFT JOIN EE7500 EE7 WITH (NOLOCK) ON EE7.EE7_FILIAL = EE8.EE8_FILIAL
+            AND EE7.EE7_PEDIDO = EE8.EE8_PEDIDO
+            AND EE7.EE7_FORN = EE8.EE8_FORN
+            AND EE7.EE7_FOLOJA = EE8.EE8_FOLOJA
+            AND EE7.D_E_L_E_T_ = ''
+        WHERE ${whereClausesSecond.join(" AND ")}
         ORDER BY
-            EEC.EEC_ETA;
+            [ETA]
     `;
 
     try {

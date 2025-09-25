@@ -1,4 +1,4 @@
-import { ArrowRight, BarChart3, Receipt, Ship,  } from "lucide-react";
+import { ArrowRight, BarChart3, ChartArea, Receipt, Ship,  } from "lucide-react";
 import Link from "next/link";
 
 const dashboardCards = [
@@ -11,6 +11,14 @@ const dashboardCards = [
         color: 'text-green-600'
     },
     {
+        href: '/gerenciamento/invoice',
+        target: "_self",
+        icon: Receipt,
+        title: 'Invoice e RE',
+        description: 'Emissão e impressão de Invoice e RE',
+        color: 'text-green-600'
+    },
+    {
         href: '/relatorios/embarques',
         target: "_self",
         icon: BarChart3,
@@ -19,12 +27,12 @@ const dashboardCards = [
         color: 'text-blue-600'
     },
     {
-        href: '/gerenciamento/invoice',
+        href: '/relatorios/dashboard-embarques',
         target: "_self",
-        icon: Receipt,
-        title: 'Invoice e RE',
-        description: 'Emissão e impressão de Invoice e RE',
-        color: 'text-green-600'
+        icon: ChartArea,
+        title: 'Dashboard de Embarques',
+        description: 'Visualizar métricas e gráficos dos embarques',
+        color: 'text-blue-600'
     },
 ]
 

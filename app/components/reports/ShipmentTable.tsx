@@ -93,11 +93,12 @@ function TableRow({ item }: { item: shipmentRecord }) {
 }
 
 interface ShipmentTableProps {
+    status: ShipmentStatus;
     data: shipmentRecord[];
     isLoading: boolean;
 }
 
-export default function ShipmentTable({ data, isLoading }: ShipmentTableProps) {
+export default function ShipmentTable({ status, data, isLoading }: ShipmentTableProps) {
     const [sortConfig, setSortConfig] = useState<{ key: SortableKeys, direction: SortDirection} | null>(null);
 
     const sortedItems = useMemo(() => {
@@ -155,7 +156,7 @@ export default function ShipmentTable({ data, isLoading }: ShipmentTableProps) {
                         {/* <th>Status</th> */}
                         <th>Sacas</th>
                         <SortableHeader label="IDE" columnKey="IDE" />
-                        <SortableHeader label="ETA" columnKey="ETA" />
+                        <SortableHeader label={status === 'Pedido' ? "Dt.Prev.Emb." : "ETA"} columnKey="ETA" />
                         <SortableHeader label="Retirada CTNR." columnKey="Retir_CTNR" />
                         <SortableHeader label="Estufagem" columnKey="Dt_Estufagem" />
                         <SortableHeader label="Chegada Porto" columnKey="Chegar_Porto" />

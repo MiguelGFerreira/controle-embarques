@@ -190,7 +190,7 @@ export function shipmentsToWorldmap(rows: ShipmentDestinations[], opts?: { produ
     const arr = Object.entries(map)
         .map(([country, value]) => ({ country, value }))
         .filter(item => item.value > minValueToInclude)
-        .sort((a, b) => b.value - a.value); // ordenar do maior para o menor (acho que nem precisa)
+        .sort((a, b) => b.value - a.value); // ordenar do maior para o menor
 
     return arr;
 }

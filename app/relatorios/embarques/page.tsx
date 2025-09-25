@@ -17,7 +17,7 @@ export default function EmbarquesReportPage() {
         ano: String(today.getFullYear()),
         ide: '',
     });
-    const [activeTab, setActiveTab] = useState<'Em preparação' | 'No porto' | 'Embarcado'>('Em preparação');
+    const [activeTab, setActiveTab] = useState<'Pedido' | 'Em preparação' | 'No porto' | 'Embarcado'>('Em preparação');
     const [statusFilter, setStatusFilter] = useState<ShipmentStatus[]>([]);
 
     let apiUrl = '/api/relatorio-embarques';
@@ -30,7 +30,7 @@ export default function EmbarquesReportPage() {
     const { data: response, error, isLoading } = useSWR(apiUrl, fetcher, { keepPreviousData: true });
 
     // iseMemo pra otimizar a separacao e filtragem dos dados
-    const { portoData, preparacaoData, embarcadoData } = useMemo(() => {
+    const { portoData, preparacaoData, embarcadoData, pedidoData } = useMemo(() => {
         const allData = response?.data || [];
         const porto = allData.filter((item: shipmentRecord) => item.Status === 'No Porto');
 
@@ -38,13 +38,15 @@ export default function EmbarquesReportPage() {
 
         let embarcado = allData.filter((item: shipmentRecord) => item.Status === 'Embarcado');
 
+        let pedido = allData.filter((item: shipmentRecord) => item.Status === 'Pedido');
+
         // if (statusFilter.length > 0) {
         //     preparacao = preparacao.filter((item: shipmentRecord) => statusFilter.includes(item.Status));
         // }
 
         filters.ide && toast.info(`Exibindo resultados apenas para ides com o texto ${filters.ide}`);
 
-        return { portoData: porto, preparacaoData: preparacao, embarcadoData: embarcado };
+        return { portoData: porto, preparacaoData: preparacao, embarcadoData: embarcado, pedidoData: pedido };
     }, [response, statusFilter]);
 
     useEffect(() => {
@@ -74,6 +76,10 @@ export default function EmbarquesReportPage() {
 
             <div className="px-4 py-2 bg-white rounded-md shadow flex gap-8 my-4">
                 <div>
+                    <span className="font-semibold text-gray-700">Pedido:</span>
+                    <span className="ml-2 text-green-700">{totalsByStatus['Pedido']?.toLocaleString('pt-BR', { maximumFractionDigits: 0 }) || 0} sacas</span>
+                </div>
+                <div>
                     <span className="font-semibold text-gray-700">Em preparação:</span>
                     <span className="ml-2 text-green-700">{totalsByStatus['Em preparação']?.toLocaleString('pt-BR', { maximumFractionDigits: 0 }) || 0} sacas</span>
                 </div>
@@ -89,6 +95,15 @@ export default function EmbarquesReportPage() {
 
             <div className="border-b px-4 border-gray-200">
                 <nav className="-mb-px flex space-x-6">
+                    <button
+                        onClick={() => setActiveTab('Pedido')}
+                        className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === 'Pedido'
+                            ? 'border-green-600 text-green-700 cursor-not-allowed'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 cursor-pointer'
+                            }`}
+                    >
+                        Pedido ({pedidoData.length})
+                    </button>
                     <button
                         onClick={() => setActiveTab('Em preparação')}
                         className={`py-3 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === 'Em preparação'
@@ -121,19 +136,23 @@ export default function EmbarquesReportPage() {
 
             {/* ABAS */}
             <div>
+                {activeTab === 'Pedido' && (
+                    <ShipmentTable status="Pedido" data={pedidoData} isLoading={isLoading && !response} />
+                )}
+
                 {activeTab === 'Em preparação' && (
                     <div className="space-y-4">
                         {/* <StatusLegendFilter onStatusChange={setStatusFilter} /> */}
-                        <ShipmentTable data={preparacaoData} isLoading={isLoading && !response} />
+                        <ShipmentTable status="Em preparação" data={preparacaoData} isLoading={isLoading && !response} />
                     </div>
                 )}
 
                 {activeTab === 'No porto' && (
-                    <ShipmentTable data={portoData} isLoading={isLoading && !response} />
+                    <ShipmentTable status="No Porto" data={portoData} isLoading={isLoading && !response} />
                 )}
 
                 {activeTab === 'Embarcado' && (
-                    <ShipmentTable data={embarcadoData} isLoading={isLoading && !response} />
+                    <ShipmentTable status="Embarcado" data={embarcadoData} isLoading={isLoading && !response} />
                 )}
             </div>
 
