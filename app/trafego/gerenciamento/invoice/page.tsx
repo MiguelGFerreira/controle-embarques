@@ -5,7 +5,7 @@ import { gerarInvoice } from "@/app/utils/gerarInvoice";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { formatarData } from "@/app/utils"
-import Modal from "@/app/components/invoice/Modal";
+import Modal from "@/app/trafego/components/invoice/Modal";
 import { Checkbox, Radio, RadioGroup, Select, } from "@headlessui/react";
 import { gerarRE } from "@/app/utils/gerarRE";
 import { CircleCheck, Receipt } from "lucide-react";

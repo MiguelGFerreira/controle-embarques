@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import useSWR from 'swr';
 import { FILIAL_NAMES, PaginatedShipmentResponse, Shipment } from "@/app/types";
 import { Bean, Edit, Search } from "lucide-react";
-import ShipmentModal from "@/app/components/ShipmentModal";
+import ShipmentModal from "@/app/trafego/components/ShipmentModal";
 import useDebounce from "@/app/utils/useDebounce";
-import Pagination from "@/app/components/Pagination";
+import Pagination from "@/app/trafego/components/Pagination";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
-import SampleModal from "@/app/components/SampleModal";
+import SampleModal from "@/app/trafego/components/SampleModal";
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 

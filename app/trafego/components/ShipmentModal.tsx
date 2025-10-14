@@ -1,10 +1,10 @@
 "use client";
 
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { FILIAL_NAMES, Shipment } from "../types";
+import { FILIAL_NAMES, Shipment } from "../../types";
 import { toast } from "sonner";
 import { Search, X } from "lucide-react";
-import { editableFieldsConfig } from "../utils";
+import { editableFieldsConfig } from "../../utils";
 import FormField from "./FormField";
 import DespachanteLookUpModal from "./gerenciamento/embarques/DespachanteLookUpModal";
 import ArmadorLookUpModal from "./gerenciamento/embarques/ArmadorLookUpModal";

@@ -1,7 +1,7 @@
 'use client';
 
-import ReportFilterBar from "@/app/components/reports/FilterBar";
-import ShipmentTable from "@/app/components/reports/ShipmentTable";
+import ReportFilterBar from "@/app/trafego/components/reports/FilterBar";
+import ShipmentTable from "@/app/trafego/components/reports/ShipmentTable";
 import { shipmentRecord, ShipmentStatus } from "@/app/types";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";

@@ -168,3 +168,28 @@ export interface ShipmentDestinations {
     Produto: 'ARA' | 'CON';
     Quantidade: number;
 }
+
+export interface ClassificationBatch {
+    Lote: string;
+    Produto: string;
+    Data: string;
+    Sacas: number;
+    Fornecedor: string;
+    ID: number;
+}
+
+export interface Padrao {
+    code: string;
+    description: string;
+    Bebida1: string;
+    Percen_beb1: number;
+    Bebida2: string;
+    Percen_beb2: number;
+    Cod_pen: string;
+    Broca: number;
+    Impureza: number;
+    Fundo: number;
+    Umidade: number;
+    Cor: string;
+    Defeito: number;
+}

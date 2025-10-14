@@ -1,5 +1,5 @@
 import { shipmentRecord, ShipmentStatus } from "@/app/types";
-import LoadingSpinner from "../LoadingSpinner";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { formatarDataIso } from "@/app/utils";
 import { useMemo, useState } from "react";
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, ChevronRight } from "lucide-react";

@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Sample, Shipment } from "../types";
+import { Sample, Shipment } from "../../types";
 import { Edit, Loader2, PlusCircle, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import useSWR from "swr";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import ClientLookUpModal from "./gerenciamento/embarques/ClientLookUpModal";
-import { formatarDataParaInput, formatarDataView } from "../utils";
+import { formatarDataParaInput, formatarDataView } from "../../utils";
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 

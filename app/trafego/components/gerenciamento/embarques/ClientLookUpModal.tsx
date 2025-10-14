@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import useDebounce from "../../../utils/useDebounce";
+import useDebounce from "@/app/utils/useDebounce";
 import useSWR from "swr";
 import { Search, X } from "lucide-react";
-import LoadingSpinner from "../../LoadingSpinner";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 

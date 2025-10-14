@@ -1,7 +1,14 @@
-import MonthlyShipmentsChart from "@/app/components/charts/MonthlyShipmentsChart";
-import WorldShipmentsMap from "@/app/components/charts/WorldShipmentsMap";
+'use client';
+
+import MonthlyShipmentsChart from "@/app/trafego/components/charts/MonthlyShipmentsChart";
+import WorldShipmentsMap from "@/app/trafego/components/charts/WorldShipmentsMap";
+import { useEffect } from "react";
 
 export default function DashboardEmbarquesPage() {
+    useEffect(() => {
+        document.title = 'Dashboard de Embarques'; // Muda o título da página dinamicamente no lado do cliente
+    }, [])
+    
     return (
         <div className="space-y-8">
             <header>

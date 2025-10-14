@@ -36,7 +36,7 @@ strong {
 }
 
 .botao {
-  @apply bg-green-800 text-white font-semibold text-sm px-4 py-2 rounded-md hover:bg-green-600 cursor-pointer transition-all duration-300 disabled:bg-green-300;
+  @apply bg-green-800 text-white font-semibold text-sm px-4 py-2 rounded-md hover:bg-green-600 cursor-pointer transition-all duration-300 disabled:bg-green-300 disabled:cursor-not-allowed;
 }
 
 .bg-tristao-trading {

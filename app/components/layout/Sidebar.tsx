@@ -1,36 +1,26 @@
 'use client';
 
-import { BarChart3, ChartArea, ChevronsLeft, ChevronsRight, LayoutDashboard, Receipt, Settings, Ship } from "lucide-react";
+import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-
-const menuItems = [
-    {
-        category: 'Geral',
-        Items: [
-            { href: '/', label: 'Início', icon: LayoutDashboard },
-        ],
-    },
-    {
-        category: 'Gerenciamento',
-        Items: [
-            { href: '/gerenciamento/embarques', label: 'Embarques', icon: Ship },
-            { href: '/gerenciamento/invoice', label: 'Invoice', icon: Receipt },
-        ],
-    },
-    {
-        category: 'Relatórios',
-        Items: [
-            { href: '/relatorios/embarques', label: 'Embarques', icon: BarChart3 },
-            { href: '/relatorios/dashboard-embarques', label: 'Dashboards', icon: ChartArea },
-        ],
-    },
-];
+import { menus } from "./menuConfig";
 
 export default function Sidebar() {
     const [isCollapsed, setIsCollapsed] = useState(true);
     const pathname = usePathname();
+
+    // pegar primeiro segmento da url: '/trafego/nanana' -> 'trafego'
+    const firstSegment = (() => {
+        if (!pathname) return null;
+        const seg = pathname.split('/').filter(Boolean)[0];
+        return seg ?? null;
+    })();
+
+    const menuForSector = firstSegment ? (menus as any)[firstSegment] : undefined;
+
+    // se nao tiver menu para o setor, não renderiza nada
+    if (!menuForSector) return null;
 
     return (
         <aside className={`flex-shrink-0 bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out ${isCollapsed ? 'w-20' : 'w-64'}`}>
@@ -65,13 +55,13 @@ export default function Sidebar() {
 
             {/* Navegação principal */}
             <nav className="flex-1 px-4 py-6 space-y-6">
-                {menuItems.map((group) => (
+                {menuForSector.map((group: any) => (
                     <div key={group.category}>
                         <h2 className="px-2 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                             {isCollapsed ? group.category.substring(0, 3) : group.category}
                         </h2>
                         <ul className="space-y-1">
-                            {group.Items.map((item) => {
+                            {group.Items.map((item: any) => {
                                 const isActive = pathname === item.href;
                                 return (
                                     <li key={item.href}>
