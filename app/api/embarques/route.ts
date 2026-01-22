@@ -46,8 +46,8 @@ export async function GET(request: Request) {
             ,TRIM(EEC_YBOOK) [Nr. Booking]
             ,TRIM(EEC_YSITUA) [Obs Planilha]
             ,TRIM(EEC_YFREET) [Prazo Freetime]
-            ,TRIM(EEC_YDESPA) [Cod. Arm]
-            ,TRIM(EEC_YARM) [Cod Despacha]
+            ,TRIM(EEC_YDESPA) [Cod Despacha]
+            ,TRIM(EEC_YARM) [Cod. Arm]
 
             ,CASE WHEN EEC_ETD = '' THEN NULL ELSE CAST(EEC_ETD AS DATE) END AS [Retir. CTNR]
             ,CASE WHEN EEC_YESTUF = '' THEN NULL ELSE CAST(EEC_YESTUF AS DATE) END AS [Dt. Estufagem]
